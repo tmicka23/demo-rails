@@ -1,6 +1,6 @@
 class SchoolsController < ApplicationController
   before_action :set_school, only: [:show, :edit, :update, :destroy]
-
+  before_action :school_access
   # GET /schools
   # GET /schools.json
   def index
@@ -9,8 +9,7 @@ class SchoolsController < ApplicationController
 
   # GET /schools/1
   # GET /schools/1.json
-  def show
-  end
+  def show; end
 
   # GET /schools/new
   def new
@@ -18,8 +17,7 @@ class SchoolsController < ApplicationController
   end
 
   # GET /schools/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /schools
   # POST /schools.json
@@ -63,12 +61,18 @@ class SchoolsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_school
-      @school = School.find(params[:id])
-    end
+  def set_school
+    @school = School.find(params[:id])
+  end
 
     # Only allow a list of trusted parameters through.
-    def school_params
-      params.require(:school).permit(:name, :capacity, :country)
+  def school_params
+    params.require(:school).permit(:name, :capacity, :country)
+  end
+
+  def school_access
+    unless user_signed_in?
+      redirect_to root_path, alert: 'page innaccessible, connectez vous ou créer un compte pour consulter cette page'
     end
+  end
 end
